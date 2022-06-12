@@ -2,75 +2,121 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
- div#en_form_wrap form {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+div#en_form_wrap form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 #en_form_wrap > form > div.en_input_box {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+}
+#en_form_wrap > form > div.en_input_box a {
+    text-decoration: underline;
+    width: fit-content;
 }
 input.register-button {
-    all: unset;
-    width: fit-content;
-    padding: 8px 30px;
-    max-height: 45px;
-    text-align: center;
-    border: 1px solid #ddd;
-    background-color: #15c39a;
-    color: #fff;
-    border-radius: 3px;
-    cursor: pointer;
+  all: unset;
+  width: fit-content;
+  padding: 8px 30px;
+  max-height: 45px;
+  text-align: center;
+  border: 1px solid #ddd;
+  background-color: #15c39a;
+  color: #fff;
+  border-radius: 3px;
+  cursor: pointer;
 }
 input.register-button:hover {
-    background-color: #19ddaf;
-    transition: .3s;
+  background-color: #19ddaf;
+  transition: 0.3s;
 }
 #en_form_wrap > form > div.en_input_box > input {
-    all: unset;
-    border: 1px solid #ddd;
-    border-radius: 3px;
+  all: unset;
+  border: 1px solid #ddd;
+  border-radius: 3px;
 }
 #en_form_wrap > form > div.en_input_box > input {
-    padding: 8px 10px;
-    max-height: 45px;
+  padding: 8px 10px;
+  max-height: 45px;
 }
-#en_form_wrap > form > div.en_input_box > input[disabled] {
-    opacity: .5;
-    background: #ddd;
+#en_form_wrap > form > div.en_input_box > input[readonly] {
+  opacity: 0.5;
+  background: #ddd;
+  pointer-events: none;
 }
 input#en_date {
-    align-items: center !important;
+  align-items: center !important;
 }
 input#en_date::-webkit-calendar-picker-indicator {
-    border-left: 1px solid #ddd;
-    padding-left: 12px;
-    cursor: pointer;
+  border-left: 1px solid #ddd;
+  padding-left: 12px;
+  cursor: pointer;
 }
-#en_form_wrap > form > div.en_input_box > input:focus{
-    border-color: #15c39a;
+#en_form_wrap > form > div.en_input_box > input:focus {
+  border-color: #15c39a;
 }
 #en_form_wrap > form > div.en_input_box > label {
-    font-weight: 500;
-    font-size: 16px;
+  font-weight: 500;
+  font-size: 16px;
 }
-#en_form_wrap > form > div.en_input_box > label > small{
-    color: red;
+#en_form_wrap > form > div.en_input_box > label > small {
+  color: red;
 }
 .en_alert {
-    padding: 5px 10px;
-    border-left: 5px solid;
+  padding: 5px 10px;
+  border-left: 5px solid;
 }
 .en_alert p {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 .en_alert.success {
-    background-color: aliceblue;
-    border-left-color: #15c39a;
+  background-color: aliceblue;
+  border-left-color: #15c39a;
 }
 .en_alert.error {
-    background-color: #ffe4e4;
-    border-left-color: red;
+  background-color: #ffe4e4;
+  border-left-color: red;
+}
+
+.agb_check {
+    display: inline-flex;
+    gap: 16px;
+    height: 30px;
+    margin: 10px 0px;
+}
+
+.agb_check label.check {
+  display: flex;
+  width: 22px;
+  height: 22px;
+}
+.agb_check label {
+  cursor: pointer;
+}
+
+input#en_agb_check {
+  position: absolute;
+  transform: scale(0);
+}
+
+input#en_agb_check:checked ~ .agb_checkbox {
+  transform: rotate(45deg);
+  width: 20px;
+  margin: -2px 2px 0 10px;
+  border-color: #15c39a;
+  border-width: 3px;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-radius: 0;
+}
+
+.agb_checkbox {
+  display: block;
+  width: inherit;
+  height: inherit;
+  border: 2px solid #999;
+  border-radius: 4px;
+  transition: all 0.2s cubic-bezier(0, 0.01, 0.23, 0.8);
 }

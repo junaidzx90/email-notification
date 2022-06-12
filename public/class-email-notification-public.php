@@ -82,6 +82,7 @@ class Email_Notification_Public {
 		require plugin_dir_path( __FILE__ )."partials/email-notification-public-display.php";
 		return ob_get_clean();
 	}
+
 	function notification_unsubscribe(){
 		ob_start();
 		global $wpdb;
@@ -92,7 +93,7 @@ class Email_Notification_Public {
 			$encodedid = base64_decode($_GET['date']);
             $registration = intval($encodedid);
 			if($wpdb->query("DELETE FROM {$wpdb->prefix}email_notifications WHERE ID = $registration")){
-				echo '<p style="text-align: center;">You are successfully unsubscribed.</p>';
+				echo '<p style="text-align: center;">Sie haben sich erfolgreich abgemeldet.</p>';
 			}else{
 				wp_safe_redirect( $registerLink );
 				exit;
@@ -104,6 +105,11 @@ class Email_Notification_Public {
 	function form_submission(){
 		if(isset($_POST['en_date_register'])){
 			if(wp_verify_nonce( $_POST['en_nonce'], 'en_form_nonce' )){
+				$defaultZone = wp_timezone_string();
+				if($defaultZone){
+					date_default_timezone_set($defaultZone);
+				}
+
 				global $en_alert, $wpdb;
 				$email = ((isset($_POST['en_email'])) ? $_POST['en_email'] : '');
 				$date = ((isset($_POST['en_date'])) ? $_POST['en_date'] : '');
@@ -113,34 +119,20 @@ class Email_Notification_Public {
 					$email = sanitize_email( $email );
 					$text = sanitize_text_field( stripslashes($text) );
 					$date = date("Y-m-d", strtotime($date));
-					$notify = $date;
-
-					$beforeAfter = ((get_option( 'default_before_after_days' )) ? get_option( 'default_before_after_days' ) : -1);
-					if($beforeAfter){
-						$day = $beforeAfter;
-						if(preg_match("/-/", $day) === 0){
-							$day = "+$day";
-						}
-						$notify = date('Y-m-d', strtotime($notify. "$day days")); 
-					}
-
-					$defaultZone = wp_timezone_string();
-					if($defaultZone){
-						date_default_timezone_set($defaultZone);
-					}
-
+					
 					$table = $wpdb->prefix.'email_notifications';
-					if(!$wpdb->get_var("SELECT ID FROM $table WHERE email = '$email' AND date = '$date'")){
+					if(!$wpdb->get_var("SELECT ID FROM $table WHERE text = '$text'")){
 						$data['email'] = $email;
 						$data['date'] = $date;
 						$data['text'] = $text;
-						$data['notify'] = $notify;
-						$wpdb->insert($table, $data );
+						$wpdb->insert( $table, $data );
 	
 						if(!is_wp_error( $wpdb )){
-							$alert = 'The new date is successfully registered!';
+							do_action( 'sent_email_instantly' );
+							
+							$alert = 'Du hast deine TÜV Benachrichtigung erfolgreich eingetragen!';
 							if(get_option('form_submission_success_msg')){
-								$alert = str_replace("{action}", "registered.", get_option('form_submission_success_msg'));
+								$alert = str_replace("{action}", "eingetragen.", get_option('form_submission_success_msg'));
 							}
 
 							setcookie("en_alert", $alert, time()+30);
@@ -149,52 +141,39 @@ class Email_Notification_Public {
 							exit;
 						}
 					}else{
-						$en_alert = ['type' => 'error', 'msg' => 'This date is already registered!'];
+						$en_alert = ['type' => 'error', 'msg' => 'Dieser Termin ist bereits registriert!'];
 					}
 				}else{
-					$en_alert = ['type' => 'error', 'msg' => 'Required fields are missing!'];
+					$en_alert = ['type' => 'error', 'msg' => 'Pflichtfelder fehlen!'];
 				}
 			}
 		}
 
 		if(isset($_POST['en_date_update'])){
 			if(wp_verify_nonce( $_POST['en_nonce'], 'en_form_nonce' )){
+				$defaultZone = wp_timezone_string();
+				if($defaultZone){
+					date_default_timezone_set($defaultZone);
+				}
+				
 				global $en_alert, $wpdb;
 				$email = ((isset($_POST['en_email'])) ? $_POST['en_email'] : '');
 				$date = ((isset($_POST['en_date'])) ? $_POST['en_date'] : '');
-				$text = ((isset($_POST['en_texts'])) ? $_POST['en_texts'] : '');
 				$en_date_id = ((isset($_POST['en_date_id'])) ? intval($_POST['en_date_id']) : null);
 
-				if(!empty($email) && !empty($date) && !empty($text) && $en_date_id > 0){
+				if(!empty($email) && !empty($date) && $en_date_id > 0){
 					$email = sanitize_email( $email );
-					$text = sanitize_text_field( stripslashes($text) );
 					$date = date("Y-m-d", strtotime($date));
-					$notify = $date;
-
-					$beforeAfter = ((get_option( 'default_before_after_days' )) ? get_option( 'default_before_after_days' ) : -1);
-					if($beforeAfter){
-						$day = $beforeAfter;
-						if(preg_match("/-/", $day) === 0){
-							$day = "+$day";
-						}
-						$notify = date('Y-m-d', strtotime($notify. "$day days")); 
-					}
-
-					$defaultZone = wp_timezone_string();
-					if($defaultZone){
-						date_default_timezone_set($defaultZone);
-					}
 
 					$table = $wpdb->prefix.'email_notifications';
+					$data['email'] = $email;
 					$data['date'] = $date;
-					$data['text'] = $text;
-					$data['notify'] = $notify;
-					$wpdb->update($table, $data, ['ID' => $en_date_id, 'email' => $email] );
+					$wpdb->update($table, $data, ['ID' => $en_date_id, 'email' => $email], ['%s', '%s'],['%d'] );
 
 					if(!is_wp_error( $wpdb )){
-						$alert = 'The new date is successfully updated!';
+						$alert = 'Du hast deine TÜV Benachrichtigung erfolgreich upgedated!';
 						if(get_option('form_submission_success_msg')){
-							$alert = str_replace("{action}", "updated.", get_option('form_submission_success_msg'));
+							$alert = str_replace("{action}", "upgedated.", get_option('form_submission_success_msg'));
 						}
 
 						setcookie("en_alert", $alert, time()+30);
@@ -204,7 +183,7 @@ class Email_Notification_Public {
 					}
 				
 				}else{
-					$en_alert = ['type' => 'error', 'msg' => 'Required fields are missing!'];
+					$en_alert = ['type' => 'error', 'msg' => 'Pflichtfelder fehlen!'];
 				}
 			}
 		}

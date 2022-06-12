@@ -70,7 +70,7 @@ class Email_Notification {
 		if ( defined( 'EMAIL_NOTIFICATION_VERSION' ) ) {
 			$this->version = EMAIL_NOTIFICATION_VERSION;
 		} else {
-			$this->version = '1.0.0';
+			$this->version = '1.0.2';
 		}
 		$this->plugin_name = 'email-notification';
 
@@ -169,6 +169,7 @@ class Email_Notification {
 		$this->loader->add_action( 'init', $plugin_admin, 'run_cronjob' );
 		// Cron functionality
 		$this->loader->add_action( 'en_notifications', $plugin_admin, 'send_email_notifications' );
+		$this->loader->add_action( 'sent_email_instantly', $plugin_admin, 'send_email_notifications' );
 
 	}
 

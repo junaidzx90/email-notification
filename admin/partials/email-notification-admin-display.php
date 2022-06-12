@@ -11,6 +11,20 @@ global $wpdb;
  * @package    Email_Notification
  * @subpackage Email_Notification/admin/partials
  */
+
+
+ if(isset($_POST['submit'])){
+    if(wp_verify_nonce( $_POST['en_admin_nonce'], 'en_admin_form_nonce' )){
+        $email = ((isset($_POST['en_email'])) ? $_POST['en_email']: '');
+        $date = ((isset($_POST['original_date'])) ? $_POST['original_date']: '');
+        $notification = intval($_POST['notification_id']);
+        global $wpdb;
+        $table = $wpdb->prefix.'email_notifications';
+        $data['email'] = $email;
+        $data['date'] = date("Y-m-d", strtotime($date));
+        $wpdb->update($table, $data, ['ID' => $notification, 'email' => $email], ['%s', '%s'],['%d'] );
+    }
+ }
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
@@ -29,38 +43,32 @@ global $wpdb;
                 ?>
                 <div class="en_input_box">
                     <label for="email">Email</label>
-                    <input type="email" id="email" readonly value="<?php echo $notification->email ?>">
+                    <input type="email" id="email" name="en_email" value="<?php echo $notification->email ?>">
                 </div>
                 <div class="en_input_box">
-                    <label for="original_date">Original Date</label>
-                    <input type="date" id="original_date" name="original_date" value="<?php echo date("Y-m-d", strtotime($notification->date)) ?>">
-                </div>
-                <div class="en_input_box">
-                    <label for="notify_date">Before/After days<small>(optional)</small></label>
-                    <input type="number" name="before_after_date" value="<?php echo ((get_option('default_before_after_days')) ? get_option('default_before_after_days') : '-1') ?>">
-                    <p style="margin: 0">This day range is specific for this date only.</p>
+                    <label for="original_date">Date</label>
+                    <input type="month" id="original_date" name="original_date" value="<?php echo date("Y-m", strtotime($notification->date)) ?>">
                 </div>
                 <div class="en_input_box">
                     <?php
-                    if(strtotime($notification->notify) > 0 && $this->date_check($notification->notify) !== null){
-                        ?>
-                        <p>Notification will sent <strong><?php echo $this->date_check($notification->notify) ?></strong></p>
-                        <?php
-                    }    
+                        $beforeAfter = ((get_option( 'default_before_after_months' )) ? get_option( 'default_before_after_months' ) : '');
+                        $modifiedDate = $notification->date;
+                        
+                        if($beforeAfter < 0 || $beforeAfter > 0){
+                            $modifiedDate = get_notify_date($beforeAfter, $modifiedDate);
+                        }
                     ?>
+                    <p>Notify date <strong><?php echo date("F, Y", strtotime($modifiedDate)) ?></strong></p>
                 </div>
                 <div class="en_input_box">
                     <label for="register_date">Registered Date</label>
                     <input type="datetime" id="register_date" readonly value="<?php echo date("Y-m-d, h:i:a", strtotime($notification->created)) ?>">
                 </div>
                 <div class="en_input_box">
-                    <label for="renew_date">Renew Date</label>
-                    <input type="date" id="renew_date" readonly value="<?php echo date("Y-m-d", strtotime($notification->renew)) ?>">
+                    <label for="en_text">Text</label>
+                    <input type="text" name="en_text" id="en_text"  readonly value="<?php echo $notification->text ?>">
                 </div>
-                <div class="en_input_box">
-                    <label for="description">Text</label>
-                    <input type="text" name="description" id="description" value="<?php echo $notification->text ?>">
-                </div>
+                <input type="hidden" name="notification_id" value="<?php echo ((isset($_GET['notification'])) ? $_GET['notification'] : '') ?>">
                 <?php wp_nonce_field( 'en_admin_form_nonce', 'en_admin_nonce', true, true ) ?>
                 <?php echo get_submit_button( 'Save changes', 'button-primary' ) ?>
                 <?php

@@ -38,8 +38,6 @@ class Email_Notification_Activator {
 			`email` VARCHAR(255) NOT NULL,
 			`date` DATE NOT NULL,
 			`text` VARCHAR(255) NOT NULL,
-			`notify` DATE NOT NULL,
-			`renew` DATE NOT NULL,
 			`notified` DATE NOT NULL,
 			`created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (`ID`)) ENGINE = InnoDB";

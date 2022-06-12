@@ -55,7 +55,9 @@ class Email_Notify_Table extends WP_List_Table
         $columns = array(
             'cb' => '<input type="checkbox" name="notification[]" />',
             'email' => 'Email',
-            'notify_date' => 'Date left',
+            '_date' => 'Date',
+            'notify_date' => 'Notify date',
+            // 'date_left' => 'Date left',
             'notified' => 'Last sent',
             'date' => 'Registered'
         );
@@ -82,28 +84,12 @@ class Email_Notify_Table extends WP_List_Table
     {
         return array(
             'date' => array('date', true),
+            '_date' => array('_date', true),
             'notify_date' => array('notify_date', true),
+            // 'date_left' => array('date_left', true),
             'notified' => array('notified', true)
         );
-    }
-
-    function time_elapsed_string($date) {
-        $defaultZone = wp_timezone_string();
-        if($defaultZone){
-            date_default_timezone_set($defaultZone);
-        }
-        
-        $date1 = new DateTime($date);  //current date or any date
-        $date2 = new DateTime(date("Y-m-d"));   //Future date
-        
-        if(strtotime($date) >= strtotime(date("Y-m-d"))){
-            $diff = $date2->diff($date1)->format("%a");  //find difference
-            $days = intval($diff);   //rounding days
-            return (($days > 1)? $days.' days left': $days.' day left');
-        }else{
-            return 'Expired';
-        }
-    }
+    }    
 
     /**
      * Get the table data
@@ -118,11 +104,21 @@ class Email_Notify_Table extends WP_List_Table
         $notifications = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}email_notifications");
         if($notifications && !is_wp_error( $notifications )){
             foreach($notifications as $notification){
+
+                $beforeAfter = ((get_option( 'default_before_after_months' )) ? get_option( 'default_before_after_months' ) : '');
+                $modifiedDate = $notification->date;
+                
+                if($beforeAfter < 0 || $beforeAfter > 0){
+                    $modifiedDate = get_notify_date($beforeAfter, $modifiedDate);
+                }
+
                 $array = [
                     'ID' => $notification->ID,
                     'email' => $notification->email,
-                    'notify_date' => ((strtotime($notification->notify) > 0) ? $this->time_elapsed_string($notification->notify) : 'null'),
-                    'notified' => ((strtotime($notification->notified) > 0) ? date("F j, Y", strtotime($notification->notified)) : 'null'),
+                    '_date' => date("F, Y", strtotime($notification->date)),
+                    'notify_date' => date("F, Y", strtotime($modifiedDate)),
+                    // 'date_left' => ((strtotime($notification->date) > 0) ? en_time_elapsed_string($modifiedDate) : 'null'),
+                    'notified' => ((strtotime($notification->notified) > 0) ? date("F, Y", strtotime($notification->notified)) : 'null'),
                     'date' => date("F j, Y, g:i a", strtotime($notification->date))
                 ];
                 $data[] = $array;

@@ -16,7 +16,7 @@
  * Plugin Name:       Email notification
  * Plugin URI:        https://www.fiverr.com
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
+ * Version:           1.0.2
  * Author:            Developer Junayed
  * Author URI:        https://www.fiverr.com/junaidzx90
  * License:           GPL-2.0+
@@ -32,12 +32,65 @@ if ( ! defined( 'WPINC' ) ) {
 
 $en_alert = null;
 
+function en_auto_renew_dates(){
+	global $wpdb;
+
+	$defaultZone = wp_timezone_string();
+	if($defaultZone){
+		date_default_timezone_set($defaultZone);
+	}
+
+	$currentDate = date("Y-m-d");
+
+	$expiredDates = $wpdb->get_results("SELECT ID, date FROM {$wpdb->prefix}email_notifications WHERE NOW() > date");
+	if($expiredDates){
+		$mdate = date("Y-m-d", strtotime($currentDate. "+2 years"));
+		$table = $wpdb->prefix.'email_notifications';
+		foreach($expiredDates as $date){
+			$data['date'] = $mdate;
+			$wpdb->update($table, $data, ['ID' => $date->ID], ['%s'], ['%d'] );
+		}
+	}
+}
+
+// [Not using]
+function en_time_elapsed_string($date) {
+	$defaultZone = wp_timezone_string();
+	if($defaultZone){
+		date_default_timezone_set($defaultZone);
+	}
+	
+	$date1 = new DateTime($date);  //current date or any date
+	$date2 = new DateTime(date("Y-m-d"));   //Future date
+	
+	if(strtotime($date) >= strtotime(date("Y-m-d"))){
+		$diff = $date2->diff($date1);  //find difference
+		return $diff->format('%y years, %m month, %d days left.');
+	}else{
+		return 'Expired';
+	}
+}
+
+function get_notify_date($condition, $date){
+	$defaultZone = wp_timezone_string();
+	if($defaultZone){
+		date_default_timezone_set($defaultZone);
+	}
+	
+	if($condition){
+		$months = $condition;
+		if(preg_match("/-/", $months) === 0){
+			$months = "+$months";
+		}
+		return date('Y-m-d', strtotime($date. "$months months")); 
+	}
+}
 /**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'EMAIL_NOTIFICATION_VERSION', '1.0.0' );
+define( 'EMAIL_NOTIFICATION_VERSION', '1.0.2' );
 
 /**
  * The code that runs during plugin activation.

@@ -47,7 +47,7 @@
                 if($currentRow){
                     $isUpdate = true;
                     $email = $currentRow->email;
-                    $date = $currentRow->date;
+                    $date = date("Y-m", strtotime($currentRow->date));
                     $text = $currentRow->text;
                 }
             }
@@ -56,20 +56,25 @@
         ?>
         <div class="en_input_box">
             <label for="en_email">Email<small>*</small></label>
-            <input type="email" <?php echo (($isUpdate)?'disabled':'') ?> required name="en_email" oninvalid="setCustomValidity('Please type your valid email address!')" oninput="setCustomValidity('')" id="en_email" value="<?php echo $email ?>">
+            <input type="email" required name="en_email" oninvalid="setCustomValidity('Bitte geben Sie Ihre gültige E-Mail-Adresse ein!')" oninput="setCustomValidity('')" id="en_email" value="<?php echo $email ?>">
         </div>
         <div class="en_input_box">
-            <label for="en_date">Date<small>*</small></label>
-            <?php 
-            $min = date("Y-m-d");
-            $day = ((get_option('en_date_selection_range')) ? get_option('en_date_selection_range') : 1);
-            $min = date('Y-m-d', strtotime($min. "$day days"));
-            ?>
-            <input type="date" min="<?php echo $min ?>" required name="en_date" oninvalid="setCustomValidity('Please select a date!')" oninput="setCustomValidity('')" id="en_date" value="<?php echo $date ?>">
+            <label for="en_date">Datum<small>*</small></label>
+            <input type="month" required name="en_date" oninvalid="setCustomValidity('Bitte wählen Sie ein Datum!')" oninput="setCustomValidity('')" id="en_date" value="<?php echo $date ?>">
         </div>
         <div class="en_input_box">
-            <label for="en_texts">Text<small>*</small></label>
-            <input type="text" name="en_texts" required oninvalid="setCustomValidity('Please write a text about this date!')" oninput="setCustomValidity('')" value="<?php echo $text ?>" id="en_texts">
+            <label for="en_texts">Kennzeichen<small>*</small></label>
+            <input type="text" <?php echo (($isUpdate)?'readonly':'') ?> name="en_texts" required oninvalid="setCustomValidity('Bitte schreiben Sie einen Text zu diesem Datum!')" oninput="setCustomValidity('')" value="<?php echo $text ?>" id="en_texts">
+        </div>
+        <div class="en_input_box">
+            <a target="_blank" href="https://gutachterteam-hamburg.de/agb">AGB</a>
+            <div class="agb_check">
+                <label class="check">
+                    <input type="checkbox" value="" name="en_agb_check" id="en_agb_check" />
+                    <span class="agb_checkbox"></span>
+                </label>
+                <label for="en_agb_check">Ich Stimme den</label>
+            </div>
         </div>
 
         <?php
@@ -85,6 +90,6 @@
         ?>
         <input type="hidden" name="en_current_page" value="<?php echo $curPageURL ?>">
         <?php wp_nonce_field( 'en_form_nonce', 'en_nonce', true, true ) ?>
-        <input type="submit" name="<?php echo (($isUpdate) ? 'en_date_update': 'en_date_register') ?>" class="register-button" value="Register">
+        <input type="submit" name="<?php echo (($isUpdate) ? 'en_date_update': 'en_date_register') ?>" class="register-button" value="Eintragen">
     </form>
 </div>
