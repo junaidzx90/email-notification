@@ -86,15 +86,7 @@ class Email_Notification_Admin {
 		// Default before/after months
 		add_settings_field( 'default_before_after_months', 'Default before/after months', [$this, 'default_before_after_months_cb'], 'general_opt_en_page','general_en_opt_section' );
 		register_setting( 'general_en_opt_section', 'default_before_after_months' );
-		// extra before/after months
-		add_settings_field( 'extra_before_after_months1', '1. before/after months', [$this, 'extra_before_after_months1_cb'], 'general_opt_en_page','general_en_opt_section' );
-		register_setting( 'general_en_opt_section', 'extra_before_after_months1' );
-		// extra before/after months
-		add_settings_field( 'extra_before_after_months2', '2. before/after months', [$this, 'extra_before_after_months2_cb'], 'general_opt_en_page','general_en_opt_section' );
-		register_setting( 'general_en_opt_section', 'extra_before_after_months2' );
-		// extra before/after months
-		add_settings_field( 'extra_before_after_months3', '3. before/after months', [$this, 'extra_before_after_months3_cb'], 'general_opt_en_page','general_en_opt_section' );
-		register_setting( 'general_en_opt_section', 'extra_before_after_months3' );
+		
 		// Form submission success message
 		add_settings_field( 'form_submission_success_msg', 'Form submission success message', [$this, 'form_submission_success_msg_cb'], 'general_opt_en_page','general_en_opt_section' );
 		register_setting( 'general_en_opt_section', 'form_submission_success_msg' );
@@ -110,6 +102,41 @@ class Email_Notification_Admin {
 		// Email footer
 		add_settings_field( 'en_email_footer', 'Email footer', [$this, 'en_email_footer_cb'], 'general_opt_en_page','general_en_opt_section' );
 		register_setting( 'general_en_opt_section', 'en_email_footer' );
+
+		add_settings_field( 'devider_line_1', '', [$this, 'devider_line_1_cb'], 'general_opt_en_page','general_en_opt_section' );
+
+		// extra before/after months
+		add_settings_field( 'extra_before_after_months1', '1. before/after months', [$this, 'extra_before_after_months1_cb'], 'general_opt_en_page','general_en_opt_section' );
+		register_setting( 'general_en_opt_section', 'extra_before_after_months1' );
+		// Email subject
+		add_settings_field( 'en_email_subject1', 'Email subject', [$this, 'en_email_subject1_cb'], 'general_opt_en_page','general_en_opt_section' );
+		register_setting( 'general_en_opt_section', 'en_email_subject1' );
+		// Email footer
+		add_settings_field( 'en_email_footer1', 'Email footer', [$this, 'en_email_footer1_cb'], 'general_opt_en_page','general_en_opt_section' );
+		register_setting( 'general_en_opt_section', 'en_email_footer1' );
+
+		add_settings_field( 'devider_line_2', '', [$this, 'devider_line_1_cb'], 'general_opt_en_page','general_en_opt_section' );
+		// extra before/after months
+		add_settings_field( 'extra_before_after_months2', '2. before/after months', [$this, 'extra_before_after_months2_cb'], 'general_opt_en_page','general_en_opt_section' );
+		register_setting( 'general_en_opt_section', 'extra_before_after_months2' );
+		// Email subject
+		add_settings_field( 'en_email_subject2', 'Email subject', [$this, 'en_email_subject2_cb'], 'general_opt_en_page','general_en_opt_section' );
+		register_setting( 'general_en_opt_section', 'en_email_subject2' );
+		// Email footer
+		add_settings_field( 'en_email_footer2', 'Email footer', [$this, 'en_email_footer2_cb'], 'general_opt_en_page','general_en_opt_section' );
+		register_setting( 'general_en_opt_section', 'en_email_footer2' );
+
+		add_settings_field( 'devider_line_3', '', [$this, 'devider_line_1_cb'], 'general_opt_en_page','general_en_opt_section' );
+		// extra before/after months
+		add_settings_field( 'extra_before_after_months3', '3. before/after months', [$this, 'extra_before_after_months3_cb'], 'general_opt_en_page','general_en_opt_section' );
+		register_setting( 'general_en_opt_section', 'extra_before_after_months3' );
+		// Email subject
+		add_settings_field( 'en_email_subject3', 'Email subject', [$this, 'en_email_subject3_cb'], 'general_opt_en_page','general_en_opt_section' );
+		register_setting( 'general_en_opt_section', 'en_email_subject3' );
+		// Email footer
+		add_settings_field( 'en_email_footer3', 'Email footer', [$this, 'en_email_footer3_cb'], 'general_opt_en_page','general_en_opt_section' );
+		register_setting( 'general_en_opt_section', 'en_email_footer3' );
+
 	}
 
 	function en_form_shortcodes_cb(){
@@ -119,44 +146,12 @@ class Email_Notification_Admin {
 	function default_before_after_months_cb(){
 		echo '<input type="number" name="default_before_after_months" id="default_before_after_months" placeholder="--" value="'.get_option('default_before_after_months', '').'">';
 	}
-
-	function extra_before_after_months1_cb(){
-		$data = get_option('extra_before_after_months1');
-		$cond = ((is_array($data) && array_key_exists('cond', $data)) ? $data['cond']: '');
-		$email = ((is_array($data) && array_key_exists('email', $data)) ? $data['email']: '');
-		$text = ((is_array($data) && array_key_exists('text', $data)) ? $data['text']: '');
-
-		echo '<input type="number" name="extra_before_after_months1[cond]" value="'.$cond.'" placeholder="--">';
-		echo '<input type="email" name="extra_before_after_months1[email]" value="'.$email.'" placeholder="email">';
-		echo '<input type="text" name="extra_before_after_months1[text]" value="'.$text.'" placeholder="text">';
-	}
-	function extra_before_after_months2_cb(){
-		$data = get_option('extra_before_after_months2');
-		$cond = ((is_array($data) && array_key_exists('cond', $data)) ? $data['cond']: '');
-		$email = ((is_array($data) && array_key_exists('email', $data)) ? $data['email']: '');
-		$text = ((is_array($data) && array_key_exists('text', $data)) ? $data['text']: '');
-
-		echo '<input type="number" name="extra_before_after_months2[cond]" value="'.$cond.'" placeholder="--">';
-		echo '<input type="email" name="extra_before_after_months2[email]" value="'.$email.'" placeholder="email">';
-		echo '<input type="text" name="extra_before_after_months2[text]" value="'.$text.'" placeholder="text">';
-	}
-	function extra_before_after_months3_cb(){
-		$data = get_option('extra_before_after_months3');
-		$cond = ((is_array($data) && array_key_exists('cond', $data)) ? $data['cond']: '');
-		$email = ((is_array($data) && array_key_exists('email', $data)) ? $data['email']: '');
-		$text = ((is_array($data) && array_key_exists('text', $data)) ? $data['text']: '');
-
-		echo '<input type="number" name="extra_before_after_months3[cond]" value="'.$cond.'" placeholder="--">';
-		echo '<input type="email" name="extra_before_after_months3[email]" value="'.$email.'" placeholder="email">';
-		echo '<input type="text" name="extra_before_after_months3[text]" value="'.$text.'" placeholder="text">';
-	}
-
 	function form_submission_success_msg_cb(){
 		echo '<input type="text" placeholder="The new date is successfully {action}!" class="widefat" name="form_submission_success_msg" value="'.get_option('form_submission_success_msg').'">';
 		echo '<p>{action} can be: registered / updated</p>';
 	}
 	function en_email_subject_cb(){
-		echo '<input type="text" class="widefat" name=="en_email_subject" placeholder="Your registered date is expired!" value="'.get_option('en_email_subject').'">';
+		echo '<input type="text" class="widefat" name="en_email_subject" placeholder="Your registered date is expired!" value="'.get_option('en_email_subject').'">';
 		echo '<p>Use <code>{text}, {username}, {date}</code> as a placeholder.</p>';
 	}
 	function en_email_logo_url_cb(){
@@ -172,6 +167,86 @@ class Email_Notification_Admin {
 	}
 	function en_email_footer_cb(){
 		echo '<input type="text" class="widefat" placeholder="@2022 '.get_bloginfo( 'name' ).' inc | {unsubscribe_link}" name="en_email_footer" value="'.get_option('en_email_footer').'">';
+		echo '<p>Use <code>{unsubscribe_link}</code> for unsubcribe link.</p>';
+	}
+
+	function devider_line_1_cb(){
+		echo '<hr>';
+	}
+
+	function extra_before_after_months1_cb(){
+		$data = get_option('extra_before_after_months1');
+		$cond = ((is_array($data) && array_key_exists('cond', $data)) ? $data['cond']: '');
+		$email = ((is_array($data) && array_key_exists('email', $data)) ? $data['email']: '');
+		$text = ((is_array($data) && array_key_exists('text', $data)) ? $data['text']: '');
+
+		echo '<input type="number" name="extra_before_after_months1[cond]" value="'.$cond.'" placeholder="--">&nbsp;';
+		echo '<input type="email" name="extra_before_after_months1[email]" value="'.$email.'" placeholder="email">';
+
+		wp_editor( wpautop( $text ), 'extra_before_after_months1', [
+			'media_buttons' => false,
+			'editor_height' => 200,
+			'textarea_name' => 'extra_before_after_months1[text]'
+		] );
+		echo '<p>Use <code>{text}, {username}, {date}, {update_link}, {unsubscribe_link}</code> as a placeholder.</p>';
+	}
+	function en_email_subject1_cb(){
+		echo '<input type="text" class="widefat" name="en_email_subject1" placeholder="Your registered date is expired!" value="'.get_option('en_email_subject1').'">';
+		echo '<p>Use <code>{text}, {username}, {date}</code> as a placeholder.</p>';
+	}
+	function en_email_footer1_cb(){
+		echo '<input type="text" class="widefat" placeholder="@2022 '.get_bloginfo( 'name' ).' inc | {unsubscribe_link}" name="en_email_footer1" value="'.get_option('en_email_footer1').'">';
+		echo '<p>Use <code>{unsubscribe_link}</code> for unsubcribe link.</p>';
+	}
+
+	
+	function extra_before_after_months2_cb(){
+		$data = get_option('extra_before_after_months2');
+		$cond = ((is_array($data) && array_key_exists('cond', $data)) ? $data['cond']: '');
+		$email = ((is_array($data) && array_key_exists('email', $data)) ? $data['email']: '');
+		$text = ((is_array($data) && array_key_exists('text', $data)) ? $data['text']: '');
+
+		echo '<input type="number" name="extra_before_after_months2[cond]" value="'.$cond.'" placeholder="--">&nbsp;';
+		echo '<input type="email" name="extra_before_after_months2[email]" value="'.$email.'" placeholder="email">';
+
+		wp_editor( wpautop( $text ), 'extra_before_after_months2', [
+			'media_buttons' => false,
+			'editor_height' => 200,
+			'textarea_name' => 'extra_before_after_months2[text]'
+		] );
+		echo '<p>Use <code>{text}, {username}, {date}, {update_link}, {unsubscribe_link}</code> as a placeholder.</p>';
+	}
+	function en_email_subject2_cb(){
+		echo '<input type="text" class="widefat" name="en_email_subject2" placeholder="Your registered date is expired!" value="'.get_option('en_email_subject2').'">';
+		echo '<p>Use <code>{text}, {username}, {date}</code> as a placeholder.</p>';
+	}
+	function en_email_footer2_cb(){
+		echo '<input type="text" class="widefat" placeholder="@2022 '.get_bloginfo( 'name' ).' inc | {unsubscribe_link}" name="en_email_footer2" value="'.get_option('en_email_footer2').'">';
+		echo '<p>Use <code>{unsubscribe_link}</code> for unsubcribe link.</p>';
+	}
+	
+	
+	function extra_before_after_months3_cb(){
+		$data = get_option('extra_before_after_months3');
+		$cond = ((is_array($data) && array_key_exists('cond', $data)) ? $data['cond']: '');
+		$email = ((is_array($data) && array_key_exists('email', $data)) ? $data['email']: '');
+		$text = ((is_array($data) && array_key_exists('text', $data)) ? $data['text']: '');
+
+		echo '<input type="number" name="extra_before_after_months3[cond]" value="'.$cond.'" placeholder="--">&nbsp;';
+		echo '<input type="email" name="extra_before_after_months3[email]" value="'.$email.'" placeholder="email">';
+		wp_editor( wpautop( $text ), 'extra_before_after_months3', [
+			'media_buttons' => false,
+			'editor_height' => 200,
+			'textarea_name' => 'extra_before_after_months3[text]'
+		] );
+		echo '<p>Use <code>{text}, {username}, {date}, {update_link}, {unsubscribe_link}</code> as a placeholder.</p>';
+	}
+	function en_email_subject3_cb(){
+		echo '<input type="text" class="widefat" name="en_email_subject3" placeholder="Your registered date is expired!" value="'.get_option('en_email_subject3').'">';
+		echo '<p>Use <code>{text}, {username}, {date}</code> as a placeholder.</p>';
+	}
+	function en_email_footer3_cb(){
+		echo '<input type="text" class="widefat" placeholder="@2022 '.get_bloginfo( 'name' ).' inc | {unsubscribe_link}" name="en_email_footer3" value="'.get_option('en_email_footer3').'">';
 		echo '<p>Use <code>{unsubscribe_link}</code> for unsubcribe link.</p>';
 	}
 
@@ -314,7 +389,9 @@ class Email_Notification_Admin {
 			foreach($upcommingDates as $upcomming){
 				$upDate = $upcomming->date;
 				$sentEmail = null;
-				$sentText = null;
+				$emailSubject = null;
+				$emailFooter = null;
+				$bodyText = null;
 				$action = false;
 				// Default
 				if(!$action){
@@ -332,7 +409,9 @@ class Email_Notification_Admin {
 					$data1 = get_option('extra_before_after_months1');
 					$cond1 = ((is_array($data1) && array_key_exists('cond', $data1)) ? $data1['cond']: '');
 					$sentEmail = ((is_array($data1) && array_key_exists('email', $data1)) ? $data1['email']: null);
-					$sentText = ((is_array($data1) && array_key_exists('text', $data1)) ? $data1['text']: null);
+					$bodyText = ((is_array($data1) && array_key_exists('text', $data1)) ? $data1['text']: null);
+					$emailSubject = get_option( 'en_email_subject1' );
+					$emailFooter = get_option( 'en_email_footer1' );
 
 					if($cond1 < 0 || $cond1 > 0){
 						$currDate1 = get_notify_date($cond1, $upDate);
@@ -346,7 +425,9 @@ class Email_Notification_Admin {
 					$data2 = get_option('extra_before_after_months2');
 					$cond2 = ((is_array($data2) && array_key_exists('cond', $data2)) ? $data2['cond']: '');
 					$sentEmail = ((is_array($data2) && array_key_exists('email', $data2)) ? $data2['email']: null);
-					$sentText = ((is_array($data2) && array_key_exists('text', $data2)) ? $data2['text']: null);
+					$bodyText = ((is_array($data2) && array_key_exists('text', $data2)) ? $data2['text']: null);
+					$emailSubject = get_option( 'en_email_subject2' );
+					$emailFooter = get_option( 'en_email_footer2' );
 
 					if($cond2 < 0 || $cond2 > 0){
 						$currDate2 = get_notify_date($cond2, $upDate);
@@ -360,7 +441,9 @@ class Email_Notification_Admin {
 					$data3 = get_option('extra_before_after_months3');
 					$cond3 = ((is_array($data3) && array_key_exists('cond', $data3)) ? $data3['cond']: '');
 					$sentEmail = ((is_array($data3) && array_key_exists('email', $data3)) ? $data3['email']: null);
-					$sentText = ((is_array($data3) && array_key_exists('text', $data3)) ? $data3['text']: null);
+					$bodyText = ((is_array($data3) && array_key_exists('text', $data3)) ? $data3['text']: null);
+					$emailSubject = get_option( 'en_email_subject3' );
+					$emailFooter = get_option( 'en_email_footer3' );
 
 					if($cond3 < 0 || $cond3 > 0){
 						$currDate3 = get_notify_date($cond3, $upDate);
@@ -377,7 +460,7 @@ class Email_Notification_Admin {
 				
 				if($action){
 					$did = $upcomming->ID;
-					$text = (($sentText) ? $sentText : $upcomming->text);
+					$text = $upcomming->text;
 					$updateLink = (($register_post_id) ? get_the_permalink( $register_post_id ): null);
 					$updateLink .= "?date=".$upcomming->ID;
 					$updateLink = str_replace(["http://", "https://"], "", $updateLink);
@@ -386,9 +469,19 @@ class Email_Notification_Admin {
 					$unsubscribeLink .= "?date=".base64_encode($upcomming->ID);
 
 					$email_subject = ((get_option('en_email_subject')) ? get_option('en_email_subject') : 'Your registered date is expired!');
+					if($emailSubject !== null){
+						$email_subject = $emailSubject;
+					}
 					$logo_url = ((get_option('en_email_logo_url')) ? get_option('en_email_logo_url') : '');
 					$email_body = ((get_option('en_email_body')) ? get_option('en_email_body') : '');
+					if($bodyText !== null){
+						$email_body = $bodyText;
+					}
+
 					$email_footer = ((get_option('en_email_footer')) ? get_option('en_email_footer') : '@2022 '.get_bloginfo( 'name' ).' inc | {unsubscribe_link}');
+					if($emailFooter !== null){
+						$email_footer = $emailFooter;
+					}
 
 					$username = explode("@", $upcomming->email)[0];
 					$email_subject = str_replace("{username}", ucfirst($username), $email_subject );
