@@ -57,7 +57,6 @@ class Email_Notify_Table extends WP_List_Table
             'email' => 'Email',
             '_date' => 'Date',
             'notify_date' => 'Notify date',
-            // 'date_left' => 'Date left',
             'notified' => 'Last sent',
             'date' => 'Registered'
         );
@@ -86,7 +85,6 @@ class Email_Notify_Table extends WP_List_Table
             'date' => array('date', true),
             '_date' => array('_date', true),
             'notify_date' => array('notify_date', true),
-            // 'date_left' => array('date_left', true),
             'notified' => array('notified', true)
         );
     }    
@@ -117,7 +115,6 @@ class Email_Notify_Table extends WP_List_Table
                     'email' => $notification->email,
                     '_date' => date("F, Y", strtotime($notification->date)),
                     'notify_date' => date("F, Y", strtotime($modifiedDate)),
-                    // 'date_left' => ((strtotime($notification->date) > 0) ? en_time_elapsed_string($modifiedDate) : 'null'),
                     'notified' => ((strtotime($notification->notified) > 0) ? date("F, Y", strtotime($notification->notified)) : 'null'),
                     'date' => date("F j, Y, g:i a", strtotime($notification->date))
                 ];

@@ -53,6 +53,23 @@ function en_auto_renew_dates(){
 	}
 }
 
+function english_to_german_month($month){
+	$month = str_replace("January", "Januar", $month);
+	$month = str_replace("February", "Februar", $month);
+	$month = str_replace("March", "März", $month);
+	$month = str_replace("April", "April", $month);
+	$month = str_replace("May", "Mai", $month);
+	$month = str_replace("June", "Juni", $month);
+	$month = str_replace("July", "Juli", $month);
+	$month = str_replace("August", "August", $month);
+	$month = str_replace("September", "September", $month);
+	$month = str_replace("October", "Oktober", $month);
+	$month = str_replace("November", "November", $month);
+	$month = str_replace("December", "Dezember", $month);
+	return $month;
+}
+
+
 // [Not using]
 function en_time_elapsed_string($date) {
 	$defaultZone = wp_timezone_string();

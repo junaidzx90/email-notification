@@ -377,8 +377,6 @@ class Email_Notification_Admin {
 		}
 
 		$currentDate = date("Y-m-d");
-		$year = date("Y", strtotime($currentDate));
-		$month = date("m", strtotime($currentDate));
 
 		$upcommingDates = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}email_notifications WHERE notified != '$currentDate'");
 
@@ -398,7 +396,7 @@ class Email_Notification_Admin {
 					$beforeAfter = ((get_option( 'default_before_after_months' )) ? get_option( 'default_before_after_months' ) : '');
 					if($beforeAfter < 0 || $beforeAfter > 0){
 						$currDate = get_notify_date($beforeAfter, $upDate);
-						if(strtotime(date("Y-m", $currDate)) === strtotime(date("Y-m", $currentDate))){
+						if(strtotime(date("Y-m", strtotime($currDate))) === strtotime(date("Y-m", strtotime($currentDate)))){
 							$action = true;
 						}
 					}
@@ -415,7 +413,7 @@ class Email_Notification_Admin {
 
 					if($cond1 < 0 || $cond1 > 0){
 						$currDate1 = get_notify_date($cond1, $upDate);
-						if(strtotime(date("Y-m", $currDate1)) === strtotime(date("Y-m", $currentDate))){
+						if(strtotime(date("Y-m", strtotime($currDate1))) === strtotime(date("Y-m", strtotime($currentDate)))){
 							$action = true;
 						}
 					}
@@ -431,11 +429,12 @@ class Email_Notification_Admin {
 
 					if($cond2 < 0 || $cond2 > 0){
 						$currDate2 = get_notify_date($cond2, $upDate);
-						if(strtotime(date("Y-m", $currDate2)) === strtotime(date("Y-m", $currentDate))){
+						if(strtotime(date("Y-m", strtotime($currDate2))) === strtotime(date("Y-m", strtotime($currentDate)))){
 							$action = true;
 						}
 					}
 				}
+
 				if(!$action){
 					$currDate3 = null;
 					$data3 = get_option('extra_before_after_months3');
@@ -447,13 +446,13 @@ class Email_Notification_Admin {
 
 					if($cond3 < 0 || $cond3 > 0){
 						$currDate3 = get_notify_date($cond3, $upDate);
-						if(strtotime(date("Y-m", $currDate3)) === strtotime(date("Y-m", $currentDate))){
+						if(strtotime(date("Y-m", strtotime($currDate3))) === strtotime(date("Y-m", strtotime($currentDate)))){
 							$action = true;
 						}
 					}
 				}
 				if(!$action){
-					if(strtotime(date("Y-m", $upDate)) === strtotime(date("Y-m", $currentDate))){
+					if(strtotime(date("Y-m", strtotime($upDate))) === strtotime(date("Y-m", strtotime($currentDate)))){
 						$action = true;
 					}
 				}
@@ -483,14 +482,16 @@ class Email_Notification_Admin {
 						$email_footer = $emailFooter;
 					}
 
+					$transDate = english_to_german_month(date("F, Y", strtotime($upcomming->date)));
+
 					$username = explode("@", $upcomming->email)[0];
 					$email_subject = str_replace("{username}", ucfirst($username), $email_subject );
 					$email_subject = str_replace("{text}", '<strong>'.$text.'</strong>', $email_subject );
-					$email_subject = str_replace("{date}", '<strong>'.date("F, Y", strtotime($upcomming->date)).'</strong>', $email_subject );
+					$email_subject = str_replace("{date}", '<strong>'.$transDate.'</strong>', $email_subject );
 
 					$email_body = str_replace("{username}", '<strong>'.ucfirst($username).'</strong>', $email_body );
 					$email_body = str_replace("{text}", '<strong>'.$text.'</strong>', $email_body );
-					$email_body = str_replace("{date}", '<strong>'.date("F, Y", strtotime($upcomming->date)).'</strong>', $email_body );
+					$email_body = str_replace("{date}", '<strong>'.$transDate.'</strong>', $email_body );
 					$email_body = str_replace("{update_link}", $updateLink, $email_body );
 					$email_body = str_replace("{unsubscribe_link}", $unsubscribeLink, $email_body );
 
