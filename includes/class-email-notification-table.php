@@ -56,7 +56,6 @@ class Email_Notify_Table extends WP_List_Table
             'cb' => '<input type="checkbox" name="notification[]" />',
             'email' => 'Email',
             '_date' => 'Date',
-            'notify_date' => 'Notify date',
             'notified' => 'Last sent',
             'date' => 'Registered'
         );
@@ -84,7 +83,6 @@ class Email_Notify_Table extends WP_List_Table
         return array(
             'date' => array('date', true),
             '_date' => array('_date', true),
-            'notify_date' => array('notify_date', true),
             'notified' => array('notified', true)
         );
     }    
@@ -114,7 +112,6 @@ class Email_Notify_Table extends WP_List_Table
                     'ID' => $notification->ID,
                     'email' => $notification->email,
                     '_date' => date("F, Y", strtotime($notification->date)),
-                    'notify_date' => date("F, Y", strtotime($modifiedDate)),
                     'notified' => ((strtotime($notification->notified) > 0) ? date("F, Y", strtotime($notification->notified)) : 'null'),
                     'date' => date("F j, Y, g:i a", strtotime($notification->date))
                 ];

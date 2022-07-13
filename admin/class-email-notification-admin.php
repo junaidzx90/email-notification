@@ -377,8 +377,9 @@ class Email_Notification_Admin {
 		}
 
 		$currentDate = date("Y-m-d");
+		$month = date("m");
 
-		$upcommingDates = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}email_notifications WHERE notified != '$currentDate'");
+		$upcommingDates = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}email_notifications WHERE MONTH(notified) != '$month'");
 
 		$register_post_id = $wpdb->get_var("SELECT ID FROM {$wpdb->prefix}posts WHERE post_content LIKE '%[notification_reg_form]%'");
 		$unsubscribe_post_id = $wpdb->get_var("SELECT ID FROM {$wpdb->prefix}posts WHERE post_content LIKE '%[unsubscribe]%'");
@@ -394,9 +395,11 @@ class Email_Notification_Admin {
 				// Default
 				if(!$action){
 					$beforeAfter = ((get_option( 'default_before_after_months' )) ? get_option( 'default_before_after_months' ) : '');
-					if($beforeAfter < 0 || $beforeAfter > 0){
+
+					if($beforeAfter < 0 || $beforeAfter > 0 || empty($beforeAfter)){
 						$currDate = get_notify_date($beforeAfter, $upDate);
 						if(strtotime(date("Y-m", strtotime($currDate))) === strtotime(date("Y-m", strtotime($currentDate)))){
+							$emailSubject = get_option('en_email_subject');
 							$action = true;
 						}
 					}
@@ -406,30 +409,33 @@ class Email_Notification_Admin {
 					$currDate1 = null;
 					$data1 = get_option('extra_before_after_months1');
 					$cond1 = ((is_array($data1) && array_key_exists('cond', $data1)) ? $data1['cond']: '');
-					$sentEmail = ((is_array($data1) && array_key_exists('email', $data1)) ? $data1['email']: null);
-					$bodyText = ((is_array($data1) && array_key_exists('text', $data1)) ? $data1['text']: null);
-					$emailSubject = get_option( 'en_email_subject1' );
-					$emailFooter = get_option( 'en_email_footer1' );
 
-					if($cond1 < 0 || $cond1 > 0){
+					if($cond1 < 0 || $cond1 > 0 || empty($cond1)){
 						$currDate1 = get_notify_date($cond1, $upDate);
 						if(strtotime(date("Y-m", strtotime($currDate1))) === strtotime(date("Y-m", strtotime($currentDate)))){
+							$sentEmail = ((is_array($data1) && array_key_exists('email', $data1)) ? $data1['email']: null);
+							$bodyText = ((is_array($data1) && array_key_exists('text', $data1)) ? $data1['text']: null);
+							$emailSubject = get_option( 'en_email_subject1' );
+							$emailFooter = get_option( 'en_email_footer1' );
+
 							$action = true;
 						}
 					}
 				}
+				
 				if(!$action){
 					$currDate2 = null;
 					$data2 = get_option('extra_before_after_months2');
 					$cond2 = ((is_array($data2) && array_key_exists('cond', $data2)) ? $data2['cond']: '');
-					$sentEmail = ((is_array($data2) && array_key_exists('email', $data2)) ? $data2['email']: null);
-					$bodyText = ((is_array($data2) && array_key_exists('text', $data2)) ? $data2['text']: null);
-					$emailSubject = get_option( 'en_email_subject2' );
-					$emailFooter = get_option( 'en_email_footer2' );
 
-					if($cond2 < 0 || $cond2 > 0){
+					if($cond2 < 0 || $cond2 > 0 || empty($cond2)){
 						$currDate2 = get_notify_date($cond2, $upDate);
 						if(strtotime(date("Y-m", strtotime($currDate2))) === strtotime(date("Y-m", strtotime($currentDate)))){
+							$sentEmail = ((is_array($data2) && array_key_exists('email', $data2)) ? $data2['email']: null);
+							$bodyText = ((is_array($data2) && array_key_exists('text', $data2)) ? $data2['text']: null);
+							$emailSubject = get_option( 'en_email_subject2' );
+							$emailFooter = get_option( 'en_email_footer2' );
+
 							$action = true;
 						}
 					}
@@ -439,18 +445,20 @@ class Email_Notification_Admin {
 					$currDate3 = null;
 					$data3 = get_option('extra_before_after_months3');
 					$cond3 = ((is_array($data3) && array_key_exists('cond', $data3)) ? $data3['cond']: '');
-					$sentEmail = ((is_array($data3) && array_key_exists('email', $data3)) ? $data3['email']: null);
-					$bodyText = ((is_array($data3) && array_key_exists('text', $data3)) ? $data3['text']: null);
-					$emailSubject = get_option( 'en_email_subject3' );
-					$emailFooter = get_option( 'en_email_footer3' );
 
-					if($cond3 < 0 || $cond3 > 0){
+					if($cond3 < 0 || $cond3 > 0 || empty($cond3)){
 						$currDate3 = get_notify_date($cond3, $upDate);
 						if(strtotime(date("Y-m", strtotime($currDate3))) === strtotime(date("Y-m", strtotime($currentDate)))){
+							$sentEmail = ((is_array($data3) && array_key_exists('email', $data3)) ? $data3['email']: null);
+							$bodyText = ((is_array($data3) && array_key_exists('text', $data3)) ? $data3['text']: null);
+							$emailSubject = get_option( 'en_email_subject3' );
+							$emailFooter = get_option( 'en_email_footer3' );
+
 							$action = true;
 						}
 					}
 				}
+
 				if(!$action){
 					if(strtotime(date("Y-m", strtotime($upDate))) === strtotime(date("Y-m", strtotime($currentDate)))){
 						$action = true;
@@ -467,10 +475,8 @@ class Email_Notification_Admin {
 					$unsubscribeLink = (($unsubscribe_post_id) ? get_the_permalink( $unsubscribe_post_id ): null);
 					$unsubscribeLink .= "?date=".base64_encode($upcomming->ID);
 
-					$email_subject = ((get_option('en_email_subject')) ? get_option('en_email_subject') : 'Your registered date is expired!');
-					if($emailSubject !== null){
-						$email_subject = $emailSubject;
-					}
+					$email_subject = (($emailSubject) ? $emailSubject : 'Your registered date is expired!');
+
 					$logo_url = ((get_option('en_email_logo_url')) ? get_option('en_email_logo_url') : '');
 					$email_body = ((get_option('en_email_body')) ? get_option('en_email_body') : '');
 					if($bodyText !== null){

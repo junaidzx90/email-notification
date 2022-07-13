@@ -101,6 +101,8 @@ function get_notify_date($condition, $date){
 		}
 		return date('Y-m-d', strtotime($date. "$months months")); 
 	}
+
+	return $date;
 }
 /**
  * Currently plugin version.
